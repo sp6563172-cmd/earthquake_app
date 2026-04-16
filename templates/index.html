@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Earthquake Explorer</title>
+    <style>
+        /* Reset some default styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Body Styling */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #1e1e2f;
+            color: #f0f0f0;
+            line-height: 1.6;
+            padding: 40px 20px;
+        }
+
+        /* Container to center content */
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: #252945;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Header Styling */
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #22c55e;
+            font-size: 2.5em;
+        }
+
+        /* Form Styling */
+        form {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+
+        input[type="text"],
+        input[type="number"] {
+            padding: 12px 15px;
+            margin: 10px 10px;
+            border: none;
+            border-radius: 6px;
+            flex: 1 1 300px;
+            min-width: 200px;
+            font-size: 1em;
+        }
+
+        button {
+            padding: 12px 25px;
+            margin: 10px;
+            border: none;
+            border-radius: 6px;
+            background-color: #22c55e;
+            color: #fff;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #16a34a;
+        }
+
+        /* Table Styling */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #444;
+        }
+
+        th {
+            background-color: #22c55e;
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        tr:hover {
+            background-color: #3c3c55;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 600px) {
+            form {
+                flex-direction: column;
+                align-items: center;
+            }
+            input[type="text"],
+            input[type="number"],
+            button {
+                width: 100%;
+                margin: 10px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌍 Earthquake Explorer</h1>
+        
+        <!-- Search Form -->
+        <form method="POST">
+            <input type="text" name="search" placeholder="Search by location..." value="{{ search }}">
+            <input type="number" step="0.1" name="min_mag" placeholder="Min Magnitude" value="{{ min_mag }}">
+            <button type="submit">Apply Filters</button>
+        </form>
+        
+        <!-- Earthquake Table -->
+        {{ table | safe }}
+    </div>
+</body>
+</html>
