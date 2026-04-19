@@ -1,592 +1,748 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>SEISMIC EXPLORER // GEOLOGICAL INTELLIGENCE SYSTEM</title>
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@300;400;500;600&display=swap" rel="stylesheet"/>
-<style>
-  :root {
-    --neon-cyan: #00f5ff;
-    --neon-green: #39ff14;
-    --neon-red: #ff2d55;
-    --neon-orange: #ff9500;
-    --bg-deep: #020810;
-    --bg-panel: #060e1a;
-    --bg-card: #081525;
-    --grid-color: rgba(0,245,255,0.06);
-    --border-glow: rgba(0,245,255,0.3);
-    --text-primary: #e0f7ff;
-    --text-dim: #4a7a8a;
-    --text-accent: #00f5ff;
-  }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SEISMIC EXPLORER // GEOLOGICAL INTELLIGENCE</title>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #050f0f;
+            --bg-secondary: #0a1a1a;
+            --bg-card: #0d2020;
+            --border-color: #1a4040;
+            --accent-cyan: #00ffcc;
+            --accent-red: #ff2244;
+            --accent-yellow: #ffcc00;
+            --text-primary: #c8fff0;
+            --text-muted: #4a8080;
+            --grid-color: rgba(0, 255, 204, 0.04);
+        }
 
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
-  body {
-    background: var(--bg-deep);
-    color: var(--text-primary);
-    font-family: 'Rajdhani', sans-serif;
-    min-height: 100vh;
-    overflow-x: hidden;
-    position: relative;
-  }
+        body {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: 'Share Tech Mono', monospace;
+            min-height: 100vh;
+            background-image:
+                linear-gradient(var(--grid-color) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
 
-  /* Animated grid background */
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image:
-      linear-gradient(var(--grid-color) 1px, transparent 1px),
-      linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
-    background-size: 40px 40px;
-    z-index: 0;
-    animation: gridPulse 8s ease-in-out infinite;
-  }
+        /* ─── HEADER ─── */
+        .header {
+            text-align: center;
+            padding: 50px 20px 30px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .header-subtitle {
+            font-size: 11px;
+            letter-spacing: 6px;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+        }
+        .header-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(28px, 5vw, 58px);
+            font-weight: 900;
+            color: var(--accent-cyan);
+            letter-spacing: 4px;
+            text-shadow: 0 0 30px rgba(0, 255, 204, 0.4), 0 0 60px rgba(0, 255, 204, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+        }
+        .header-icon {
+            width: 44px; height: 44px;
+            border: 2px solid var(--accent-cyan);
+            clip-path: polygon(50% 0%, 93% 25%, 93% 75%, 50% 100%, 7% 75%, 7% 25%);
+            display: flex; align-items: center; justify-content: center;
+            background: rgba(0, 255, 204, 0.08);
+            animation: pulse-hex 3s ease-in-out infinite;
+        }
+        @keyframes pulse-hex {
+            0%, 100% { box-shadow: 0 0 0 rgba(0,255,204,0); }
+            50% { box-shadow: 0 0 20px rgba(0, 255, 204, 0.3); }
+        }
+        .header-tagline {
+            font-size: 11px;
+            letter-spacing: 4px;
+            color: var(--text-muted);
+            margin-top: 10px;
+        }
 
-  body::after {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background: radial-gradient(ellipse 80% 50% at 50% 0%, rgba(0,245,255,0.05) 0%, transparent 60%),
-                radial-gradient(ellipse 40% 40% at 80% 80%, rgba(57,255,20,0.03) 0%, transparent 50%);
-    z-index: 0;
-    pointer-events: none;
-  }
+        /* ─── STATUS BAR ─── */
+        .status-bar {
+            max-width: 1100px;
+            margin: 28px auto;
+            padding: 12px 24px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            font-size: 11px;
+            letter-spacing: 2px;
+        }
+        .status-dot {
+            width: 8px; height: 8px;
+            border-radius: 50%;
+            background: #00ff88;
+            box-shadow: 0 0 8px #00ff88;
+            animation: blink 2s infinite;
+        }
+        @keyframes blink { 0%,100%{opacity:1;} 50%{opacity:0.3;} }
+        .status-item { color: var(--text-muted); }
+        .status-item span { color: var(--accent-cyan); font-weight: bold; }
 
-  @keyframes gridPulse {
-    0%, 100% { opacity: 0.6; }
-    50% { opacity: 1; }
-  }
+        /* ─── MAIN CONTAINER ─── */
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 20px 60px; }
 
-  .container {
-    position: relative;
-    z-index: 1;
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 32px 24px 64px;
-  }
+        /* ─── FILTER CARD ─── */
+        .filter-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+        .filter-label {
+            font-size: 10px;
+            letter-spacing: 3px;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+        }
+        .filter-row {
+            display: flex;
+            gap: 16px;
+            align-items: flex-end;
+        }
+        .filter-group { flex: 1; }
+        .filter-group input {
+            width: 100%;
+            background: #081515;
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 13px;
+            padding: 12px 16px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .filter-group input:focus { border-color: var(--accent-cyan); }
+        .filter-group input::placeholder { color: var(--text-muted); }
+        .scan-btn {
+            background: transparent;
+            border: 1px solid var(--accent-cyan);
+            color: var(--accent-cyan);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 12px;
+            letter-spacing: 2px;
+            padding: 12px 28px;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        .scan-btn:hover {
+            background: var(--accent-cyan);
+            color: var(--bg-primary);
+        }
 
-  /* ── HEADER ── */
-  header {
-    text-align: center;
-    margin-bottom: 48px;
-    position: relative;
-  }
+        /* ─── STATS ROW ─── */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 24px;
+            text-align: center;
+        }
+        .stat-value {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--accent-cyan);
+            text-shadow: 0 0 15px rgba(0,255,204,0.3);
+        }
+        .stat-label {
+            font-size: 10px;
+            letter-spacing: 3px;
+            color: var(--text-muted);
+            margin-top: 6px;
+        }
 
-  .header-badge {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 4px;
-    color: var(--neon-cyan);
-    opacity: 0.7;
-    margin-bottom: 12px;
-    animation: blink 2s step-end infinite;
-  }
+        /* ─── CAMERA SECTION ─── */
+        .camera-section {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 28px;
+            margin-bottom: 24px;
+            position: relative;
+        }
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        .section-icon {
+            width: 32px; height: 32px;
+            background: rgba(255, 34, 68, 0.15);
+            border: 1px solid rgba(255, 34, 68, 0.4);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 14px;
+        }
+        .section-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 13px;
+            letter-spacing: 3px;
+            color: var(--accent-cyan);
+        }
+        .section-badge {
+            margin-left: auto;
+            font-size: 10px;
+            letter-spacing: 2px;
+            color: var(--accent-red);
+            border: 1px solid rgba(255,34,68,0.4);
+            padding: 3px 10px;
+            background: rgba(255,34,68,0.08);
+        }
 
-  @keyframes blink { 50% { opacity: 0.2; } }
+        /* Upload Zone */
+        .upload-zone {
+            border: 1px dashed rgba(0, 255, 204, 0.3);
+            background: rgba(0, 255, 204, 0.02);
+            padding: 40px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        .upload-zone:hover, .upload-zone.dragover {
+            border-color: var(--accent-cyan);
+            background: rgba(0, 255, 204, 0.06);
+        }
+        .upload-zone input[type="file"] {
+            position: absolute;
+            width: 100%; height: 100%;
+            top: 0; left: 0;
+            opacity: 0;
+            cursor: pointer;
+        }
+        .upload-icon { font-size: 40px; margin-bottom: 14px; }
+        .upload-text {
+            font-size: 13px;
+            color: var(--text-muted);
+            letter-spacing: 2px;
+        }
+        .upload-text strong {
+            color: var(--accent-cyan);
+            display: block;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 11px;
+            letter-spacing: 3px;
+            margin-bottom: 6px;
+        }
+        .upload-hint {
+            font-size: 10px;
+            color: rgba(74,128,128,0.6);
+            margin-top: 8px;
+            letter-spacing: 2px;
+        }
 
-  h1 {
-    font-family: 'Orbitron', monospace;
-    font-size: clamp(26px, 5vw, 46px);
-    font-weight: 900;
-    letter-spacing: 6px;
-    text-transform: uppercase;
-    background: linear-gradient(135deg, #ffffff 0%, var(--neon-cyan) 50%, #ffffff 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    filter: drop-shadow(0 0 20px rgba(0,245,255,0.4));
-    margin-bottom: 8px;
-  }
+        /* Camera Controls */
+        .camera-controls {
+            display: flex;
+            gap: 12px;
+            margin-top: 16px;
+            align-items: center;
+        }
+        .ctrl-btn {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 11px;
+            letter-spacing: 2px;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .ctrl-btn:hover {
+            border-color: var(--accent-cyan);
+            color: var(--accent-cyan);
+        }
+        .analyze-btn {
+            background: rgba(255,34,68,0.1);
+            border: 1px solid var(--accent-red);
+            color: var(--accent-red);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 11px;
+            letter-spacing: 3px;
+            padding: 11px 28px;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-left: auto;
+        }
+        .analyze-btn:hover:not(:disabled) {
+            background: var(--accent-red);
+            color: #fff;
+        }
+        .analyze-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
 
-  .header-sub {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 12px;
-    color: var(--text-dim);
-    letter-spacing: 3px;
-  }
+        /* Preview */
+        #image-preview-container {
+            margin-top: 16px;
+            display: none;
+        }
+        #image-preview-container img {
+            max-height: 200px;
+            border: 1px solid var(--border-color);
+            display: block;
+        }
+        .preview-name {
+            font-size: 10px;
+            color: var(--text-muted);
+            letter-spacing: 2px;
+            margin-top: 8px;
+        }
 
-  .header-line {
-    margin-top: 20px;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, var(--neon-cyan), transparent);
-    box-shadow: 0 0 12px var(--neon-cyan);
-  }
+        /* Live camera */
+        #camera-stream-container {
+            margin-top: 16px;
+            display: none;
+        }
+        #camera-video {
+            max-width: 100%;
+            border: 1px solid var(--border-color);
+            display: block;
+        }
+        #capture-btn {
+            margin-top: 10px;
+            background: rgba(0,255,204,0.1);
+            border: 1px solid var(--accent-cyan);
+            color: var(--accent-cyan);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 11px;
+            letter-spacing: 2px;
+            padding: 10px 24px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        #capture-btn:hover { background: var(--accent-cyan); color: var(--bg-primary); }
 
-  /* ── LIVE INDICATOR ── */
-  .status-bar {
-    display: flex;
-    align-items: center;
-    gap: 24px;
-    margin-bottom: 28px;
-    padding: 10px 18px;
-    border: 1px solid rgba(0,245,255,0.15);
-    background: rgba(0,245,255,0.03);
-    border-radius: 4px;
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 11px;
-    color: var(--text-dim);
-    flex-wrap: wrap;
-  }
+        /* ─── ANALYSIS RESULTS ─── */
+        #analysis-result {
+            margin-top: 20px;
+            display: none;
+        }
+        .result-header {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 11px;
+            letter-spacing: 3px;
+            color: var(--accent-cyan);
+            padding: 10px 16px;
+            background: rgba(0,255,204,0.06);
+            border: 1px solid rgba(0,255,204,0.2);
+            border-bottom: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .result-body {
+            background: #040d0d;
+            border: 1px solid rgba(0,255,204,0.2);
+            padding: 20px 24px;
+            font-size: 13px;
+            line-height: 1.9;
+            color: var(--text-primary);
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+        .result-body strong, .result-body b {
+            color: var(--accent-cyan);
+        }
 
-  .live-dot {
-    width: 8px; height: 8px;
-    border-radius: 50%;
-    background: var(--neon-green);
-    box-shadow: 0 0 10px var(--neon-green);
-    animation: livePulse 1.5s ease-in-out infinite;
-    flex-shrink: 0;
-  }
+        /* Loading state */
+        .loading-bar {
+            margin-top: 16px;
+            display: none;
+        }
+        .loading-bar-inner {
+            height: 2px;
+            background: var(--accent-cyan);
+            width: 0%;
+            animation: load-progress 2s ease-in-out infinite;
+        }
+        @keyframes load-progress {
+            0% { width: 0%; opacity: 1; }
+            70% { width: 85%; opacity: 1; }
+            100% { width: 100%; opacity: 0; }
+        }
+        .loading-text {
+            font-size: 11px;
+            color: var(--text-muted);
+            letter-spacing: 3px;
+            margin-top: 8px;
+            animation: blink 1.2s infinite;
+        }
 
-  @keyframes livePulse {
-    0%, 100% { box-shadow: 0 0 6px var(--neon-green); opacity: 1; }
-    50% { box-shadow: 0 0 16px var(--neon-green), 0 0 30px rgba(57,255,20,0.3); opacity: 0.7; }
-  }
+        /* ─── DATA TABLE ─── */
+        .table-section {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+        }
+        .table-header {
+            display: flex;
+            padding: 16px 24px;
+            background: rgba(0,255,204,0.04);
+            border-bottom: 1px solid var(--border-color);
+            font-size: 11px;
+            letter-spacing: 3px;
+            gap: 0;
+        }
+        .table-col-time { flex: 0 0 180px; color: var(--text-muted); }
+        .table-col-loc { flex: 1; color: var(--text-muted); }
+        .table-col-mag { flex: 0 0 80px; text-align: right; color: var(--accent-yellow); }
 
-  .status-item { display: flex; align-items: center; gap: 8px; }
-  .status-item span:last-child { color: var(--neon-cyan); }
+        .table { width: 100%; border-collapse: collapse; }
+        .table tbody tr {
+            border-bottom: 1px solid rgba(26,64,64,0.5);
+            transition: background 0.15s;
+        }
+        .table tbody tr:hover { background: rgba(0,255,204,0.03); }
+        .table td {
+            padding: 14px 24px;
+            font-size: 13px;
+        }
+        /* Style the pandas-generated table */
+        .table thead tr { background: transparent !important; }
+        .table thead th {
+            display: none; /* We use custom headers above */
+        }
+        .table td:first-child { color: var(--accent-cyan); font-size: 12px; }
+        .table td:last-child { text-align: right; }
 
-  /* ── FILTER PANEL ── */
-  .filter-panel {
-    border: 1px solid var(--border-glow);
-    background: var(--bg-panel);
-    border-radius: 6px;
-    padding: 24px 28px;
-    margin-bottom: 32px;
-    box-shadow: 0 0 30px rgba(0,245,255,0.08), inset 0 0 60px rgba(0,245,255,0.02);
-    position: relative;
-    overflow: hidden;
-  }
+        /* Magnitude badge colors */
+        .mag-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 12px;
+            font-weight: 700;
+        }
 
-  .filter-panel::before {
-    content: 'FILTER CONTROLS';
-    position: absolute;
-    top: 10px; right: 18px;
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 10px;
-    color: rgba(0,245,255,0.3);
-    letter-spacing: 2px;
-  }
+        /* ─── CANVAS HIDDEN ─── */
+        #capture-canvas { display: none; }
 
-  .filter-grid {
-    display: grid;
-    grid-template-columns: 1fr 220px auto;
-    gap: 16px;
-    align-items: end;
-  }
-
-  @media (max-width: 680px) {
-    .filter-grid { grid-template-columns: 1fr; }
-  }
-
-  .field-group { display: flex; flex-direction: column; gap: 8px; }
-
-  label {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 2px;
-    color: var(--text-dim);
-    text-transform: uppercase;
-  }
-
-  input[type="text"], input[type="number"] {
-    background: var(--bg-card);
-    border: 1px solid rgba(0,245,255,0.2);
-    border-radius: 4px;
-    padding: 10px 16px;
-    color: var(--text-primary);
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 14px;
-    width: 100%;
-    outline: none;
-    transition: border-color 0.2s, box-shadow 0.2s;
-  }
-
-  input[type="text"]:focus, input[type="number"]:focus {
-    border-color: var(--neon-cyan);
-    box-shadow: 0 0 12px rgba(0,245,255,0.2), inset 0 0 12px rgba(0,245,255,0.04);
-  }
-
-  input::placeholder { color: var(--text-dim); }
-
-  .btn-apply {
-    padding: 11px 28px;
-    background: transparent;
-    border: 1px solid var(--neon-cyan);
-    color: var(--neon-cyan);
-    font-family: 'Orbitron', monospace;
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: all 0.2s;
-    position: relative;
-    overflow: hidden;
-    white-space: nowrap;
-  }
-
-  .btn-apply::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: var(--neon-cyan);
-    transform: scaleX(0);
-    transform-origin: left;
-    transition: transform 0.25s ease;
-    z-index: 0;
-  }
-
-  .btn-apply:hover::before { transform: scaleX(1); }
-  .btn-apply:hover { color: var(--bg-deep); box-shadow: 0 0 20px rgba(0,245,255,0.4); }
-  .btn-apply span { position: relative; z-index: 1; }
-
-  /* ── STATS ROW ── */
-  .stats-row {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
-    margin-bottom: 28px;
-  }
-
-  @media (max-width: 560px) { .stats-row { grid-template-columns: 1fr; } }
-
-  .stat-card {
-    border: 1px solid rgba(0,245,255,0.15);
-    background: var(--bg-panel);
-    border-radius: 6px;
-    padding: 16px 20px;
-    text-align: center;
-    transition: border-color 0.2s;
-  }
-
-  .stat-card:hover { border-color: var(--neon-cyan); box-shadow: 0 0 16px rgba(0,245,255,0.1); }
-
-  .stat-val {
-    font-family: 'Orbitron', monospace;
-    font-size: 28px;
-    font-weight: 700;
-    color: var(--neon-cyan);
-    text-shadow: 0 0 12px rgba(0,245,255,0.5);
-  }
-
-  .stat-label {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 2px;
-    color: var(--text-dim);
-    margin-top: 4px;
-  }
-
-  /* ── TABLE ── */
-  .table-wrapper {
-    border: 1px solid var(--border-glow);
-    border-radius: 6px;
-    overflow: hidden;
-    box-shadow: 0 0 40px rgba(0,245,255,0.08);
-  }
-
-  .table-header-row {
-    display: grid;
-    grid-template-columns: 200px 1fr 110px;
-    background: linear-gradient(90deg, rgba(0,245,255,0.12), rgba(0,245,255,0.06));
-    border-bottom: 1px solid rgba(0,245,255,0.3);
-    padding: 0;
-  }
-
-  .th {
-    padding: 14px 20px;
-    font-family: 'Orbitron', monospace;
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 3px;
-    color: var(--neon-cyan);
-    text-transform: uppercase;
-  }
-
-  .th:not(:last-child) { border-right: 1px solid rgba(0,245,255,0.1); }
-
-  .table-body { background: var(--bg-panel); }
-
-  .data-row {
-    display: grid;
-    grid-template-columns: 200px 1fr 110px;
-    border-bottom: 1px solid rgba(0,245,255,0.06);
-    cursor: pointer;
-    transition: background 0.15s;
-    animation: rowIn 0.4s ease both;
-  }
-
-  @keyframes rowIn {
-    from { opacity: 0; transform: translateX(-10px); }
-    to { opacity: 1; transform: translateX(0); }
-  }
-
-  .data-row:hover { background: rgba(0,245,255,0.05); }
-  .data-row:last-child { border-bottom: none; }
-
-  .td {
-    padding: 14px 20px;
-    font-size: 15px;
-    font-family: 'Rajdhani', sans-serif;
-    font-weight: 400;
-    display: flex;
-    align-items: center;
-  }
-
-  .td:not(:last-child) { border-right: 1px solid rgba(0,245,255,0.05); }
-
-  .td-time {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 12px;
-    color: rgba(0,245,255,0.6);
-  }
-
-  .td-place { color: var(--text-primary); }
-
-  .td-mag {
-    font-family: 'Orbitron', monospace;
-    font-size: 16px;
-    font-weight: 700;
-    justify-content: center;
-  }
-
-  .mag-pill {
-    padding: 4px 12px;
-    border-radius: 3px;
-    font-size: 14px;
-    font-weight: 700;
-    letter-spacing: 1px;
-  }
-
-  /* Magnitude color tiers */
-  .mag-critical { background: rgba(255,45,85,0.15); color: #ff2d55; border: 1px solid rgba(255,45,85,0.4); text-shadow: 0 0 8px rgba(255,45,85,0.6); }
-  .mag-high     { background: rgba(255,149,0,0.15); color: #ff9500; border: 1px solid rgba(255,149,0,0.4); text-shadow: 0 0 8px rgba(255,149,0,0.6); }
-  .mag-medium   { background: rgba(255,214,10,0.12); color: #ffd60a; border: 1px solid rgba(255,214,10,0.35); }
-  .mag-low      { background: rgba(57,255,20,0.1);  color: #39ff14; border: 1px solid rgba(57,255,20,0.3); }
-
-  /* ── EMPTY / LOADING ── */
-  .empty-state {
-    padding: 60px 20px;
-    text-align: center;
-    color: var(--text-dim);
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 13px;
-    letter-spacing: 2px;
-  }
-
-  .empty-state .icon { font-size: 36px; margin-bottom: 12px; opacity: 0.4; }
-
-  /* ── SCAN LINE EFFECT ── */
-  .scan-line {
-    position: fixed;
-    left: 0; right: 0;
-    height: 2px;
-    background: linear-gradient(90deg, transparent, rgba(0,245,255,0.15), transparent);
-    animation: scan 6s linear infinite;
-    z-index: 2;
-    pointer-events: none;
-  }
-
-  @keyframes scan {
-    0% { top: -2px; }
-    100% { top: 100vh; }
-  }
-
-  /* ── FOOTER ── */
-  footer {
-    margin-top: 40px;
-    text-align: center;
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 11px;
-    color: rgba(0,245,255,0.2);
-    letter-spacing: 2px;
-  }
-</style>
+        /* ─── RESPONSIVE ─── */
+        @media (max-width: 640px) {
+            .filter-row { flex-direction: column; }
+            .stats-row { grid-template-columns: 1fr; }
+            .camera-controls { flex-direction: column; align-items: stretch; }
+            .analyze-btn { margin-left: 0; }
+        }
+    </style>
 </head>
 <body>
-<div class="scan-line"></div>
+
+<!-- ─── HEADER ─── -->
+<div class="header">
+    <div class="header-subtitle">+ GEOLOGICAL INTELLIGENCE SYSTEM v2.1 +</div>
+    <div class="header-title">
+        <div class="header-icon">◈</div>
+        EARTHQUAKE EXPLORER
+    </div>
+    <div class="header-tagline">USGS DATA // REAL-TIME ANALYSIS // GLOBAL COVERAGE // AI IMAGE SCAN</div>
+</div>
+
+<!-- ─── STATUS BAR ─── -->
+<div class="status-bar" style="max-width:1100px; margin:28px auto; padding:12px 24px;">
+    <div class="status-dot"></div>
+    <div class="status-item">SYSTEM <span>ONLINE</span></div>
+    <div class="status-item">SOURCE <span>USGS EARTHQUAKE CATALOG</span></div>
+    <div class="status-item">RECORDS <span>{{ table | length }}</span></div>
+    <div class="status-item">AI VISION <span>ACTIVE</span></div>
+</div>
 
 <div class="container">
 
-  <!-- HEADER -->
-  <header>
-    <div class="header-badge">▸ GEOLOGICAL INTELLIGENCE SYSTEM v2.1 ◂</div>
-    <h1>⬡ Earthquake Explorer</h1>
-    <div class="header-sub">USGS DATA // REAL-TIME ANALYSIS // GLOBAL COVERAGE</div>
-    <div class="header-line"></div>
-  </header>
+    <!-- ─── FILTER CARD ─── -->
+    <div class="filter-card">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+            <div style="font-size:10px; letter-spacing:3px; color:var(--text-muted);">◎ FILTER CONTROLS</div>
+        </div>
+        <form method="POST">
+            <div class="filter-row">
+                <div class="filter-group">
+                    <div class="filter-label">◎ LOCATION QUERY</div>
+                    <input type="text" name="search" value="{{ search }}" placeholder="e.g. india, california, pacific...">
+                </div>
+                <div class="filter-group" style="flex:0 0 200px;">
+                    <div class="filter-label">⚡ MIN MAGNITUDE</div>
+                    <input type="number" name="min_mag" value="{{ min_mag }}" step="0.1" min="0" max="10" placeholder="e.g. 5.0">
+                </div>
+                <button type="submit" class="scan-btn">SCAN ▶</button>
+            </div>
+        </form>
+    </div>
 
-  <!-- STATUS BAR -->
-  <div class="status-bar">
-    <div class="live-dot"></div>
-    <div class="status-item"><span>SYSTEM</span><span>ONLINE</span></div>
-    <div class="status-item"><span>SOURCE</span><span>USGS EARTHQUAKE CATALOG</span></div>
-    <div class="status-item"><span>RECORDS</span><span id="totalRecords">—</span></div>
-    <div class="status-item"><span>FILTERED</span><span id="filteredCount">—</span></div>
-  </div>
+    <!-- ─── STATS ─── -->
+    <div class="stats-row" id="stats-row">
+        <div class="stat-card">
+            <div class="stat-value" id="stat-max">—</div>
+            <div class="stat-label">MAX MAGNITUDE</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value" id="stat-avg">—</div>
+            <div class="stat-label">AVG MAGNITUDE</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value" id="stat-count">—</div>
+            <div class="stat-label">EVENTS DISPLAYED</div>
+        </div>
+    </div>
 
-  <!-- FILTERS -->
-  <div class="filter-panel">
-    <div class="filter-grid">
-      <div class="field-group">
-        <label>⌕ LOCATION QUERY</label>
-        <input type="text" id="searchInput" placeholder="e.g. india, california, pacific..." />
-      </div>
-      <div class="field-group">
-        <label>⚡ MIN MAGNITUDE</label>
-        <input type="number" id="magInput" placeholder="e.g. 5.0" step="0.1" min="0" max="10"/>
-      </div>
-      <button class="btn-apply" onclick="applyFilters()">
-        <span>SCAN ▶</span>
-      </button>
-    </div>
-  </div>
+    <!-- ─── CAMERA / IMAGE ANALYSIS ─── -->
+    <div class="camera-section">
+        <div class="section-header">
+            <div class="section-icon">📷</div>
+            <div class="section-title">IMAGE SEISMIC SCAN</div>
+            <div class="section-badge">AI POWERED</div>
+        </div>
 
-  <!-- STATS -->
-  <div class="stats-row">
-    <div class="stat-card">
-      <div class="stat-val" id="statMax">—</div>
-      <div class="stat-label">MAX MAGNITUDE</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-val" id="statAvg">—</div>
-      <div class="stat-label">AVG MAGNITUDE</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-val" id="statCount">—</div>
-      <div class="stat-label">EVENTS DISPLAYED</div>
-    </div>
-  </div>
+        <div class="upload-zone" id="upload-zone">
+            <input type="file" id="image-input" accept="image/*" capture="environment">
+            <div class="upload-icon">🛰️</div>
+            <div class="upload-text">
+                <strong>UPLOAD OR CAPTURE IMAGE</strong>
+                Drag & drop, click to browse, or use camera
+            </div>
+            <div class="upload-hint">SUPPORTS: JPG · PNG · WEBP · GIF — seismographs, reports, damage photos, charts</div>
+        </div>
 
-  <!-- TABLE -->
-  <div class="table-wrapper">
-    <div class="table-header-row">
-      <div class="th">⏱ TIME (UTC)</div>
-      <div class="th">📡 EPICENTER / LOCATION</div>
-      <div class="th" style="text-align:center">⚡ MAG</div>
-    </div>
-    <div class="table-body" id="tableBody">
-      <div class="empty-state">
-        <div class="icon">🌐</div>
-        <div>INITIALIZING SEISMIC DATA FEED...</div>
-      </div>
-    </div>
-  </div>
+        <!-- Preview -->
+        <div id="image-preview-container">
+            <img id="image-preview" src="" alt="Preview">
+            <div class="preview-name" id="preview-name"></div>
+        </div>
 
-  <footer>
-    SEISMIC EXPLORER // COLLEGE PROJECT // DATA: USGS EARTHQUAKE CATALOG CSV
-  </footer>
+        <!-- Live Camera -->
+        <div id="camera-stream-container">
+            <video id="camera-video" autoplay playsinline></video>
+            <canvas id="capture-canvas"></canvas>
+            <button id="capture-btn">📸 CAPTURE FRAME</button>
+        </div>
+
+        <!-- Controls -->
+        <div class="camera-controls">
+            <button class="ctrl-btn" id="open-camera-btn">📷 OPEN CAMERA</button>
+            <button class="ctrl-btn" id="clear-btn" style="display:none;">✕ CLEAR</button>
+            <button class="analyze-btn" id="analyze-btn" disabled>⚡ ANALYZE IMAGE</button>
+        </div>
+
+        <!-- Loading -->
+        <div class="loading-bar" id="loading-bar">
+            <div class="loading-bar-inner"></div>
+            <div class="loading-text">SCANNING IMAGE // EXTRACTING SEISMIC DATA...</div>
+        </div>
+
+        <!-- Results -->
+        <div id="analysis-result">
+            <div class="result-header">
+                <span>⚡</span> AI SEISMIC ANALYSIS REPORT
+            </div>
+            <div class="result-body" id="result-body"></div>
+        </div>
+    </div>
+
+    <!-- ─── DATA TABLE ─── -->
+    <div class="table-section">
+        <div class="table-header">
+            <div class="table-col-time">⏱ TIME (UTC)</div>
+            <div class="table-col-loc">📍 EPICENTER / LOCATION</div>
+            <div class="table-col-mag">⚡ MAG</div>
+        </div>
+        <div style="overflow-x:auto;">
+            {{ table | safe }}
+        </div>
+    </div>
+
 </div>
 
 <script>
-// ── Embedded sample dataset (mirrors the CSV used in the Flask app) ──
-const RAW_DATA = [
-  { time: "2015-12-04 22:25", place: "Southeast Indian Ridge",                   mag: 7.1 },
-  { time: "2014-03-10 05:18", place: "77 km WNW of Indianola, California",        mag: 6.8 },
-  { time: "2016-01-03 23:05", place: "29 km W of Imphal, India",                  mag: 6.7 },
-  { time: "2015-11-08 16:47", place: "Nicobar Islands, India region",             mag: 6.6 },
-  { time: "2014-06-14 11:10", place: "South Indian Ocean",                        mag: 6.5 },
-  { time: "2013-10-04 17:26", place: "Mid-Indian Ridge",                          mag: 6.4 },
-  { time: "2017-11-17 22:34", place: "156 km NNE of Shi Yomi, India",             mag: 6.4 },
-  { time: "2016-01-01 02:00", place: "Western Indian-Antarctic Ridge",            mag: 6.3 },
-  { time: "2019-04-18 14:46", place: "Western Indian-Antarctic Ridge",            mag: 6.3 },
-  { time: "2015-03-05 22:08", place: "73 km E of Kota Ternate, Indonesia",        mag: 6.2 },
-  { time: "2016-08-24 01:36", place: "3 km SE of Accumoli, Italy",               mag: 6.2 },
-  { time: "2011-03-11 05:46", place: "Pacific Ocean off the coast of Honshu, Japan", mag: 9.0 },
-  { time: "2010-01-12 21:53", place: "Haiti region",                              mag: 7.0 },
-  { time: "2004-12-26 00:58", place: "Off the west coast of northern Sumatra",   mag: 9.1 },
-  { time: "2020-01-07 17:11", place: "7 km SE of Indios, Puerto Rico",            mag: 6.4 },
-  { time: "2018-08-05 11:46", place: "14 km N of Loloan, Indonesia",              mag: 6.9 },
-  { time: "2021-07-29 06:15", place: "50 km E of Perryville, Alaska",             mag: 8.2 },
-  { time: "2022-09-19 18:05", place: "14 km NE of Coalcoman de Vazquez, Mexico", mag: 7.6 },
-  { time: "2023-02-06 01:17", place: "Kahramanmaraş, Turkey",                    mag: 7.8 },
-  { time: "2023-02-06 10:24", place: "Elbistan, Turkey",                         mag: 7.7 },
-  { time: "2019-07-06 03:19", place: "1 km E of Ridgecrest, California",          mag: 7.1 },
-  { time: "2021-08-14 12:29", place: "Nippes, Haiti",                             mag: 7.2 },
-  { time: "2022-11-22 02:03", place: "Cianjur Regency, Indonesia",               mag: 5.6 },
-  { time: "2014-04-01 23:46", place: "77 km W of Iquique, Chile",                 mag: 8.2 },
-  { time: "2015-09-16 22:54", place: "48 km W of Illapel, Chile",                 mag: 8.3 },
-  { time: "2017-09-08 04:49", place: "98 km SSW of Tres Picos, Mexico",           mag: 8.2 },
-  { time: "2018-09-06 15:49", place: "Hokkaido, Japan",                           mag: 6.6 },
-  { time: "2020-10-30 11:51", place: "17 km NE of Samos, Greece",                mag: 7.0 },
-  { time: "2016-11-13 11:02", place: "50 km SSW of Culverden, New Zealand",       mag: 7.8 },
-  { time: "2013-10-15 00:12", place: "2 km S of Sagbayan, Philippines",           mag: 7.1 },
-];
+    // ─── STATS FROM TABLE ───
+    (function () {
+        const rows = document.querySelectorAll('.table tbody tr');
+        const mags = [];
+        rows.forEach(row => {
+            const cells = row.querySelectorAll('td');
+            if (cells.length >= 3) {
+                const mag = parseFloat(cells[2].textContent.trim());
+                if (!isNaN(mag)) mags.push(mag);
 
-let displayed = [...RAW_DATA];
+                // Color magnitude cell
+                const val = mag;
+                let color = '#00ffcc';
+                if (val >= 8) color = '#ff2244';
+                else if (val >= 7) color = '#ff6600';
+                else if (val >= 6) color = '#ffcc00';
+                cells[2].innerHTML = `<span class="mag-badge" style="color:${color}; border:1px solid ${color}30; background:${color}11">${val.toFixed(1)}</span>`;
+            }
+        });
+        if (mags.length) {
+            document.getElementById('stat-max').textContent = Math.max(...mags).toFixed(1);
+            document.getElementById('stat-avg').textContent = (mags.reduce((a,b)=>a+b,0)/mags.length).toFixed(2);
+            document.getElementById('stat-count').textContent = mags.length;
+        }
+    })();
 
-function getMagClass(m) {
-  if (m >= 7.5) return 'mag-critical';
-  if (m >= 6.5) return 'mag-high';
-  if (m >= 5.5) return 'mag-medium';
-  return 'mag-low';
-}
+    // ─── IMAGE UPLOAD ───
+    const imageInput = document.getElementById('image-input');
+    const previewContainer = document.getElementById('image-preview-container');
+    const previewImg = document.getElementById('image-preview');
+    const previewName = document.getElementById('preview-name');
+    const analyzeBtn = document.getElementById('analyze-btn');
+    const clearBtn = document.getElementById('clear-btn');
+    const uploadZone = document.getElementById('upload-zone');
 
-function updateStats(data) {
-  if (!data.length) {
-    document.getElementById('statMax').textContent = '—';
-    document.getElementById('statAvg').textContent = '—';
-    document.getElementById('statCount').textContent = '0';
-    return;
-  }
-  const mags = data.map(d => d.mag);
-  document.getElementById('statMax').textContent = Math.max(...mags).toFixed(1);
-  document.getElementById('statAvg').textContent = (mags.reduce((a,b)=>a+b,0)/mags.length).toFixed(2);
-  document.getElementById('statCount').textContent = data.length;
-}
+    let selectedFile = null;
 
-function renderTable(data) {
-  const body = document.getElementById('tableBody');
-  if (!data.length) {
-    body.innerHTML = `<div class="empty-state"><div class="icon">🔍</div><div>NO EVENTS MATCH CURRENT FILTERS</div></div>`;
-    return;
-  }
-  body.innerHTML = data.map((row, i) => `
-    <div class="data-row" style="animation-delay:${i * 0.04}s">
-      <div class="td td-time">${row.time}</div>
-      <div class="td td-place">${row.place}</div>
-      <div class="td td-mag">
-        <span class="mag-pill ${getMagClass(row.mag)}">${row.mag.toFixed(1)}</span>
-      </div>
-    </div>`).join('');
-}
+    imageInput.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file) loadFile(file);
+    });
 
-function applyFilters() {
-  const search  = document.getElementById('searchInput').value.trim().toLowerCase();
-  const minMag  = parseFloat(document.getElementById('magInput').value) || 0;
+    function loadFile(file) {
+        selectedFile = file;
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+            previewImg.src = ev.target.result;
+            previewContainer.style.display = 'block';
+            previewName.textContent = '◎ FILE: ' + file.name.toUpperCase();
+            analyzeBtn.disabled = false;
+            clearBtn.style.display = '';
+            document.getElementById('analysis-result').style.display = 'none';
+        };
+        reader.readAsDataURL(file);
+    }
 
-  let filtered = RAW_DATA.filter(row => {
-    const matchPlace = !search || row.place.toLowerCase().includes(search);
-    const matchMag   = row.mag >= minMag;
-    return matchPlace && matchMag;
-  });
+    // Drag & drop
+    uploadZone.addEventListener('dragover', (e) => { e.preventDefault(); uploadZone.classList.add('dragover'); });
+    uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('dragover'));
+    uploadZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        uploadZone.classList.remove('dragover');
+        if (e.dataTransfer.files[0]) loadFile(e.dataTransfer.files[0]);
+    });
 
-  // Sort descending by magnitude
-  filtered.sort((a,b) => b.mag - a.mag);
-  displayed = filtered.slice(0, 30);
+    // Clear
+    clearBtn.addEventListener('click', () => {
+        selectedFile = null;
+        imageInput.value = '';
+        previewContainer.style.display = 'none';
+        analyzeBtn.disabled = true;
+        clearBtn.style.display = 'none';
+        document.getElementById('analysis-result').style.display = 'none';
+        stopCamera();
+    });
 
-  renderTable(displayed);
-  updateStats(displayed);
-  document.getElementById('filteredCount').textContent = displayed.length;
-}
+    // ─── LIVE CAMERA ───
+    const openCameraBtn = document.getElementById('open-camera-btn');
+    const cameraContainer = document.getElementById('camera-stream-container');
+    const video = document.getElementById('camera-video');
+    const canvas = document.getElementById('capture-canvas');
+    const captureBtn = document.getElementById('capture-btn');
+    let stream = null;
 
-// Enter key triggers filter
-document.addEventListener('keydown', e => {
-  if (e.key === 'Enter') applyFilters();
-});
+    openCameraBtn.addEventListener('click', async () => {
+        if (stream) { stopCamera(); return; }
+        try {
+            stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+            video.srcObject = stream;
+            cameraContainer.style.display = 'block';
+            openCameraBtn.textContent = '✕ CLOSE CAMERA';
+        } catch (err) {
+            alert('Camera access denied or not available: ' + err.message);
+        }
+    });
 
-// Initial load
-window.addEventListener('DOMContentLoaded', () => {
-  const all = [...RAW_DATA].sort((a,b) => b.mag - a.mag);
-  renderTable(all.slice(0,30));
-  updateStats(all.slice(0,30));
-  document.getElementById('totalRecords').textContent = RAW_DATA.length;
-  document.getElementById('filteredCount').textContent = all.length;
-});
+    captureBtn.addEventListener('click', () => {
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        canvas.getContext('2d').drawImage(video, 0, 0);
+        canvas.toBlob((blob) => {
+            const file = new File([blob], 'camera-capture.jpg', { type: 'image/jpeg' });
+            loadFile(file);
+            stopCamera();
+        }, 'image/jpeg', 0.92);
+    });
+
+    function stopCamera() {
+        if (stream) {
+            stream.getTracks().forEach(t => t.stop());
+            stream = null;
+        }
+        cameraContainer.style.display = 'none';
+        openCameraBtn.textContent = '📷 OPEN CAMERA';
+    }
+
+    // ─── ANALYZE ───
+    analyzeBtn.addEventListener('click', async () => {
+        if (!selectedFile) return;
+
+        const loadingBar = document.getElementById('loading-bar');
+        const resultDiv = document.getElementById('analysis-result');
+        const resultBody = document.getElementById('result-body');
+
+        analyzeBtn.disabled = true;
+        analyzeBtn.textContent = '⏳ SCANNING...';
+        loadingBar.style.display = 'block';
+        resultDiv.style.display = 'none';
+
+        const formData = new FormData();
+        formData.append('image', selectedFile);
+
+        try {
+            const res = await fetch('/analyze-image', { method: 'POST', body: formData });
+            const data = await res.json();
+
+            loadingBar.style.display = 'none';
+
+            if (data.success) {
+                // Format bold markers
+                let text = data.raw_analysis;
+                text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+                text = text.replace(/\*(.*?)\*/g, '<em>$1</em>');
+                resultBody.innerHTML = text;
+                resultDiv.style.display = 'block';
+            } else {
+                resultBody.innerHTML = `<span style="color:var(--accent-red);">ERROR: ${data.error}</span>`;
+                resultDiv.style.display = 'block';
+            }
+        } catch (err) {
+            loadingBar.style.display = 'none';
+            resultBody.innerHTML = `<span style="color:var(--accent-red);">NETWORK ERROR: ${err.message}</span>`;
+            resultDiv.style.display = 'block';
+        }
+
+        analyzeBtn.disabled = false;
+        analyzeBtn.textContent = '⚡ ANALYZE IMAGE';
+    });
 </script>
 </body>
 </html>
