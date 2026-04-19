@@ -93,7 +93,7 @@ Format your response in a clear, structured way using the labels above. Be preci
 
     try:
         # Use Gemini Vision model
-        model = genai.GenerativeModel('gemini-1.5-flash')
+        model = genai.GenerativeModel('gemini-2.0-flash')
 
         # Prepare image for Gemini
         image_part = {
