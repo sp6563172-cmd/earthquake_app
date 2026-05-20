@@ -1,7 +1,7 @@
 
 from flask import Flask, render_template, request, jsonify
 import pandas as pd
-import google.generativeai as genai
+from google import genai
 import os
 import base64
 import numpy as np
@@ -15,9 +15,7 @@ from sklearn.model_selection import train_test_split
 app = Flask(__name__)
 
 # Configure Gemini API
-genai.configure(
-    api_key="AIzaSyCjEhkX6wIR5cRuNDkwtknBo5eICSGjgJ0"
-)
+client = genai.Client(api_key=os.environ.get("GOOGLE_API_KEY"))
 
 
 
@@ -473,9 +471,7 @@ describe the image normally.
 
     try:
 
-        model_gemini = genai.GenerativeModel(
-            'gemini-2.0-flash'
-        )
+        client = genai.Client(api_key=os.environ.get("GOOGLE_API_KEY"))
 
         image_part = {
             "mime_type": media_type,
@@ -484,10 +480,13 @@ describe the image normally.
             ).decode('utf-8')
         }
 
-        response = model_gemini.generate_content([
-            prompt,
-            {"inline_data": image_part}
-        ])
+        response = client.models.generate_content(
+    model="gemini-2.0-flash",
+    contents=[
+        prompt,
+        {"inline_data": image_part}
+    ]
+)
 
         analysis_text = response.text
 
